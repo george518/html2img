@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>图片工具箱</title>
+    <link rel="stylesheet" href="static/layui2.0.0/css/layui.css" media="all">
+</head>
+<body>
+
+<style>
+
+.input-file{
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+}
+.input-file input[type="file"] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 14px;
+    background-color: #fff;
+    transform: translate(-300px, 0px) scale(4);
+    height: 40px;
+    opacity: 0;
+    filter: alpha(opacity=0);
+ }
+</style>
+
+
+    <!-- header start -->
+    <ul class="layui-nav">
+        <!-- <li class="layui-nav-item"><a href="/">图片工具箱</a></li> -->
+        <li class="layui-nav-item layui-this">
+            <a href="/">属性图制作</a>
+        </li>
+    </ul>
+    <!-- header end -->
+    <div class="layui-container">
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+            <legend>上传文件</legend>
+        </fieldset>
+
+        
+
+        <form  onsubmit="return toVaild()" class="layui-form layui-form-pane" method="post" action="/upload/" enctype="multipart/form-data" >
+            
+            <div class="layui-row">
+                <div class="layui-col-xs6">
+                    <input type="text" name="src" lay-verify="src" autocomplete="off" placeholder="文件地址" readonly="" class="layui-input">
+                </div>
+                <div class="layui-col-xs2">
+                    <div class="layui-upload">
+                        <a class="input-file input-fileup layui-btn layui-btn-primary" href="javascript:;">
+                             选择文件<input size="20" type="file" name="myfile" id="myfile">
+                        </a>
+                    </div>
+                </div>
+
+                <div class="layui-col-xs1">
+                    &nbsp;
+                </div>
+                
+                <input type="submit" class="layui-btn" value="生成图片" />
+
+                <div class="layui-col-xs3">
+                    &nbsp;
+                </div>
+            </div>
+        </form>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <fieldset class="layui-elem-field">
+            <legend>使用说明</legend>
+            <div class="layui-field-box">
+                1、建议每次处理的属性图不要超过100个。<br />
+                2、文件名称尽量不要重复。 <br>
+                3、文件仅支持.xlsx格式的excel表格。<br />
+                4、使用前请刷新本页面。<br />
+                5、点击这里<a href="/download/attribute_img_template.xlsx"><font color="#FF5722">【下载模板】</font></a>
+            </div>
+        </fieldset>
+    </div> 
+
+    <script src="static/layui2.0.0/layui.js" charset="utf-8"></script>
+    <script src="https://cdn.bootcss.com/jquery/1.8.3/jquery.js"></script>
+    <script>
+        $(".input-fileup").on("change","input[type='file']",function(){
+            var filePath=$(this).val();
+            if(filePath.indexOf("xlsx")!=-1){
+                layui.use('layer', function(){
+                    var layer = layui.layer;
+                    layer.msg('上传成功',{icon: 6,offset:'100px',shade: [0.8, '#393D49'],closeBtn: 1,time: 3000});
+                }); 
+                var arr=filePath.split('\\');
+                var fileName=arr[arr.length-1];
+                $("input[name=src]").val(fileName);
+            }else{
+                layui.use('layer', function(){
+                    var layer = layui.layer;
+                    layer.msg('您未上传文件，或者您上传文件类型有误！',{icon: 7,offset:'100px',shade: [0.8, '#393D49'],closeBtn: 1,time: 3000});
+                }); 
+                return false
+            }
+        });
+
+        function toVaild()
+        {
+            var filename = $("input[name=src]").val();
+            if(!filename){
+               layui.use('layer', function(){
+                    var layer = layui.layer;
+                    layer.msg('请选择文件',{icon: 7,offset:'100px',shade: [0.8, '#393D49'],closeBtn: 1,time: 3000});
+                });
+                return false; 
+            }
+        }
+    </script>
+</body>
+</html>

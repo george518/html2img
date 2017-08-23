@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>图片截取实例</title>
+    <meta name="layout" content="main">  
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+    <script src="https://cdn.bootcss.com/jquery/1.8.3/jquery.js"></script>
+    <script src="https://cdn.bootcss.com/html2canvas/0.5.0-beta4/html2canvas.js"></script>
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body style="background: #e4e4e4">
+<style>
+    body{
+        font-family: "Microsoft YaHei" !important;
+    }
+</style>
+
+<script  type="text/javascript" >  
+    $(document).ready( function(){ 
+        var download_num = 0;
+        $("#download").on("click", function(event) {
+            var count = "{{data.count}}";
+            $('html, body').animate({scrollTop:0});
+            if (count==download_num) {
+                // alert("共生成"+count+"张图片");
+                // $(".img_div").show();
+            }else{
+                download_img("attr"+download_num);
+            }
+        });
+        //下载一张图片
+        function download_img(id){
+            var pic_name = $("#"+id).attr("data-picname");
+            var pic_type = $("#"+id).attr("data-pictype");
+            $('#mycanvas').remove();
+            setTimeout(function(){
+                var canvas = document.createElement("canvas"),
+                    w=$('#'+id).width(),
+                    h=$('#'+id).height();
+                canvas.width = w * 2;
+                canvas.height = h * 2;
+                canvas.style.width = w + "px";
+                canvas.style.height = h + "px";
+                var context = canvas.getContext("2d");
+                //然后将画布缩放，将图像放大两倍画到画布上
+                context.scale(2,2);
+                html2canvas(document.getElementById(id), {
+                    allowTaint: false,
+                    taintTest: true,
+                    canvas: canvas,
+                    onrendered: function(canvas) {
+                        canvas.id = "mycanvas";
+                        canvas.style.display = 'none';
+                        document.body.appendChild(canvas);
+                        //生成base64图片数据
+                        type=pic_type;
+                        imgData = canvas.toDataURL(type);
+                        var _fixType = function(type) {
+                            type = type.toLowerCase().replace(/jpg/i, 'jpeg');
+                            var r = type.match(/png|jpeg|bmp|gif/)[0];
+                            return 'image/' + r;
+                        };
+                        // 加工image data，替换mime type
+                        imgData = imgData.replace(_fixType(type),'image/octet-stream');
+                        /**
+                         * 在本地进行文件保存
+                         * @param  {String} data     要保存到本地的图片数据
+                         * @param  {String} filename 文件名
+                         */
+                        var saveFile = function(data, filename){
+                            var save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+                            save_link.href = data;
+                            save_link.download = filename;
+
+                            var event = document.createEvent('MouseEvents');
+                            event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+                            save_link.dispatchEvent(event);
+                        };
+                        // 下载后的问题名
+                        var filename = pic_name + '.' + type;
+                        // download
+                        saveFile(imgData,filename);
+                    },
+                    width:1512,
+                    height:15000
+                });
+                $("#"+id).hide();
+                download_num++;
+                $("#download").click();
+            },2500)
+        }
+    });  
+     
+</script> 
+<style type="text/css">
+    .img_div{
+        margin-bottom: 10px;padding-top: 20px; background: #ffffff;
+    }
+</style>
+
+        {% for v in data['attrs'] %}
+            
+            <div id="attr{{loop.index0}}" style="width: {{v[2]}}px; height: {{v[3]}}px;" class="img_div" data-picname="{{v[0]}}" data-pictype="{{v[1]}}">
+                <div style="width:100%;font-size:20px;text-align:center;margin:10px; ">{{v[4]}}</div>
+                <div>
+                    <table border="0" cellspacing="0" style="border-top:#666 2px solid; width:100%; background: #ffffff; color:#333">
+                        <tbody>
+                        {% for i in range(1,data['itcount']) %}
+                            {% if i>4 %}
+                                {% if data['title'][i]['col']==1 %}
+                                    <tr>
+                                        <td width="15%" height="30" style="border-bottom:#999 1px solid; background-color:#efefef; text-align:center;">{{data['title'][i]['name']}}</td>
+                                        <td style="border-bottom:#999 1px solid; text-indent:2em" colspan="3">{{v[i]}}</td>
+                                    </tr>
+                                {% else %}
+                                   
+                                    {% if data['title'][i]['col']%2==0 %}
+                                        <tr>
+                                            <td width="15%" height="30" style="border-bottom:#999 1px solid; background-color:#efefef; text-align:center;">{{data['title'][i]['name']}}</td>
+                                            <td width="35%" style="border-bottom:#999 1px solid; text-indent:2em">{{v[i]}}</td>
+                                    {% else %}
+                                            <td width="15%" height="30" style="border-bottom:#999 1px solid; background-color:#efefef; text-align:center;">{{data['title'][i]['name']}}</td>
+                                            <td width="35%" style="border-bottom:#999 1px solid; text-indent:2em">{{v[i]}}</td>
+                                        </tr>
+                                    {% endif %}
+
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                       
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endfor %}
+    
+    <div style="margin: 50px auto;text-align: center; height: 50px;background: #fff;padding-top: 10px;">
+        <button type="button" class="btn btn-success" id="download">生成并下载全部图片</button>
+    </div>
+    
+</body>
+</html>
