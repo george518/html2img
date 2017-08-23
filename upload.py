@@ -70,25 +70,10 @@ def upload_file():
         new_filename = fname.rsplit(
             '.', 1)[0] + '__' + str(unix_time) + '.' + ext  # 修改了上传的文件名
         f.save(os.path.join(file_dir, new_filename))  # 保存文件到upload目录
-        # read_excel(os.path.join(file_dir, new_filename))
-        # showTable(new_filename):
         return redirect("/show/"+new_filename)
     else:
         abort(404)
 
-
-# $title = [];
-
-# foreach ($data[0] as $key => $value) {
-# 	if($key < 5) continue;
-# 	if($value){
-# 		$tit_ = explode("-",$value);
-# 		$title[$key]['name'] = $tit_[0];
-# 		$title[$key]['col']  = $tit_[1];
-# 	}
-# }
-# unset($data[0]);
-# $attr = [];
 
 # 显示excel图片
 
