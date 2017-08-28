@@ -26,6 +26,10 @@
     opacity: 0;
     filter: alpha(opacity=0);
  }
+
+ .divimg{
+   border: 1px solid #e4e4e4;float: left;width: 340px;height: 170px;padding: 3px;margin: 10px;
+ }
 </style>
 
 
@@ -74,12 +78,32 @@
             <legend>使用说明</legend>
             <div class="layui-field-box">
                 1、建议每次处理的属性图不要超过100个。<br />
-                2、文件名称尽量不要重复。 <br>
+                2、文件名称不能包含汉字，并且尽量不要重复。 <br>
                 3、文件仅支持.xlsx格式的excel表格。<br />
-                4、使用前请刷新本页面。<br />
-                5、点击这里<a href="/download/attribute_img_template.xlsx"><font color="#FF5722">【下载模板】</font></a>
+                4、点击这里<a href="/download/attribute_img_template.xlsx"><font color="#FF5722">【下载模板】</font></a><br/>
+
             </div>
         </fieldset>
+        <br/>
+        <fieldset class="layui-elem-field">
+            <legend>使用示例(点图放大)</legend>
+            <div class="layui-field-box">
+                <div id="layer-photos-demo" class="layer-photos-demo">
+                    <br>
+                    <div class="divimg">
+                        <img layer-pid="1" layer-src="/static/images/table_data.png" src="/static/images/table_data.png" alt="excel表格样式" width="342" height="150" >
+                    </div>
+                    <div class="divimg">
+                        <img layer-pid="2" layer-src="/static/images/create_imgs.png" src="/static/images/create_imgs.png" alt="创建图片页面" width="342" height="150">
+                    </div>
+                    <div class="divimg">
+                        <img layer-pid="3" layer-src="/static/images/demo_img.png" src="/static/images/demo_img.png" alt="图片示例" width="342" height="150">
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+
     </div> 
 
     <script src="static/layui2.0.0/layui.js" charset="utf-8"></script>
@@ -115,6 +139,18 @@
                 return false; 
             }
         }
+
+        layui.use('layer', function(){
+            var layer = layui.layer;
+
+            //调用示例
+            layer.photos({
+              photos: '#layer-photos-demo'
+              ,anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+            }); 
+        });   
+        
+        
     </script>
 </body>
 </html>

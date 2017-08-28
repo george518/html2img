@@ -15,8 +15,6 @@ from flask import send_from_directory
 from flask import url_for
 from flask import redirect
 from werkzeug.utils import secure_filename
-# from xlrd import open_workbook
-# import flask_excel as excel
 from collections import OrderedDict
 from pyexcel_xls import get_data
 from pyexcel_xls import save_data
