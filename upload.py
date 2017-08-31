@@ -7,17 +7,17 @@
 import os.path
 import time
 
+from collections import OrderedDict
 from flask import Flask
 from flask import jsonify
+from flask import redirect
 from flask import render_template
 from flask import request
 from flask import send_from_directory
 from flask import url_for
-from flask import redirect
-from werkzeug.utils import secure_filename
-from collections import OrderedDict
 from pyexcel_xls import get_data
 from pyexcel_xls import save_data
+from werkzeug.utils import secure_filename
 
 
 app = Flask(__name__)
