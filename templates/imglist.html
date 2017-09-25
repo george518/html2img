@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>图片截取实例</title>
+    <meta name="layout" content="main">  
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+    <script src="https://cdn.bootcss.com/jquery/1.8.3/jquery.js"></script>
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body{
+            font-family: "Microsoft YaHei" !important;
+        }
+    </style>
+</head>
+<body>
+
+    <table class="table table-hover">
+        <tr>
+            <td>名称</td>
+            <td>图片地址</td>
+            <td>日期</td>
+        </tr>
+        {% for i in list %}
+            <tr>
+                <td>{{ i[1] }}</td>
+                <td>{{ i[2] }}</td>
+                <td>{{ i[3] }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    
+    <div style="margin: 50px auto;text-align: center; height: 50px;background: #fff;padding-top: 10px;">
+        <button type="button" class="btn btn-success" id="download">下载数据</button>
+        <button type="button" class="btn btn-default" onclick="javascript:window.location.href = document.referrer;">返回</button>
+    </div>
+    <script type="text/javascript">
+        $(function(){
+            $('#download').on('click', function(data) {
+                window.location.href = "/download_img";
+            });
+        })
+    </script>
+</body>
+</html>
