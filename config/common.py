@@ -17,7 +17,7 @@ from pyexcel_xls import save_data
 
 # 上传天猫图片
 def api_tmall_img(name, img_url):
-    url = ''
+    url = 'http://cha.aliapi.com/api/v0/image'
     user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
     params = { 'img_channel' : 'tmall_abroad', 'img_name' : name, 'img_src' : img_url } # 线上运行
     headers = { 'User-Agent' : user_agent }

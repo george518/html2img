@@ -156,8 +156,7 @@ def upload_tamll(filename):
     zipPath = file_dir + "/" + zipName
     ezipPath = os.path.join(file_dir, zipName.replace('.zip','')) # 解压出来临时存放目录
 
-    # hostIP = get_ip()
-    hostIP = get_test_ip()
+    hostIP = '127.0.0.1'
 
     if not os.path.exists(ezipPath):
         os.makedirs(ezipPath)
@@ -173,20 +172,17 @@ def upload_tamll(filename):
             name = ne[0] # 图片名称
 
             # 向天猫传图
-            img_url = "http://{0}:5000/image/{1}|{2}".format(hostIP, zipName.replace('.zip',''), f)
+            # img_url = "http://{0}:5000/image/{1}|{2}".format(hostIP, zipName.replace('.zip',''), f) # 线上
+            img_url = "D:work/workplace/html2img/" + app.config['ZIP_FOLDER'] + "/" + zipName.replace('.zip','') + "/" + f # 本地
             json_res = api_tmall_img(name, img_url)
             res = json.loads(json_res)
             tmall_url = res['data'] #上传天猫后图片地址
             data.append((name, tmall_url))
-
-            # 本地测试
-            # img_url = "http://127.0.0.1:5000/image/{0}|{1}".format(zipName.replace('.zip',''), f)
-            # data.append((name, img_url, ))
             
-            os.remove(os.path.join(ezipPath, f))
+            # os.remove(os.path.join(ezipPath, f))
         fz.close()
-    os.rmdir(ezipPath)
-    os.remove(zipPath)
+    # os.rmdir(ezipPath)
+    # os.remove(zipPath)
     db = Mysql()
     for item in data:
         sql = " insert into aali_img (name,ali_src,date) values('{0}','{1}','{2}') ".format(item[0], item[1], date)
