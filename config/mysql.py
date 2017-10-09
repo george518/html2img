@@ -4,7 +4,7 @@
 # @Last Modified by:   xiyou_zlg
 # @Last Modified time: 2017-09-22 17:06:33
 
-import mysql.connector
+import pymysql
 
 class Mysql(object):
     def __init__(self):
@@ -12,8 +12,8 @@ class Mysql(object):
         self.__username = 'root'
         self.__password = '123456'
         self.__database = 'test'
-        self.__port = '3306'
-        self.__db = mysql.connector.connect(host=self.__host,user=self.__username, password=self.__password, database=self.__database, port=self.__port)
+        self.__port = 3306
+        self.__db = pymysql.connect(host=self.__host,user=self.__username, passwd=self.__password, db=self.__database, port=self.__port)
 
     def add(self, sql):
         db = self.__db
