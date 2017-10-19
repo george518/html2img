@@ -32,7 +32,7 @@ from werkzeug.utils import secure_filename
 app = Flask(__name__)
 
 # 定义文件下载和上传地址
-ZIP_FOLDER = 'uploads\zip'
+ZIP_FOLDER = 'uploads/zip'
 UPLOAD_FOLDER = 'uploads'
 DOWNLOAD_FOLDER = 'download'
 ALLOWED_EXTENSIONS = set(['xlsx','zip'])
@@ -139,8 +139,7 @@ def upload_zip_file():
         fname = secure_filename(f.filename)
         ext = fname.rsplit('.', 1)[1]  # 获取文件后缀
         unix_time = int(time.time())
-        new_filename = fname.rsplit(
-            '.', 1)[0] + '__' + str(unix_time) + '.' + ext  # 修改了上传的文件名
+        new_filename = fname.rsplit('.', 1)[0] + '__' + str(unix_time) + '.' + ext  # 修改了上传的文件名
         f.save(os.path.join(fsp_dir, new_filename))  # 保存文件到upload目录
         return redirect("/send_tmall_imgs/"+new_filename)
     else:
@@ -170,11 +169,9 @@ def upload_tamll(filename):
         for f in flist:
             fz.extract(f, ezipPath)
             ne = f.split(".")
-            name = ne[0] # 图片名称
-
+            name = ne[0]+'.jpg' # 图片名称
             # 向天猫传图
-            img_url = "{0}image/{1}|{2}".format(hostIP, zipName.replace('.zip',''), f) # 线上
-            # img_url = "D:work/workplace/html2img/" + app.config['ZIP_FOLDER'] + "/" + zipName.replace('.zip','') + "/" + f # 本地
+            img_url = "{0}{1}/{2}".format(hostIP.replace('5000','81'), zipName.replace('.zip',''), f) # 线上
             json_res = api_tmall_img(name, img_url)
             res = json.loads(json_res)
             tmall_url = res['data'] #上传天猫后图片地址
@@ -186,7 +183,7 @@ def upload_tamll(filename):
     # os.remove(zipPath) #暂时不删除图片
     db = Mysql()
     for item in data:
-        sql = " insert into aali_img (name,ali_src,date) values('{0}','{1}','{2}') ".format(item[0], item[1], date)
+        sql = " insert into ali_attr_img (name,ali_src,date) values('{0}','{1}','{2}') ".format(item[0], item[1], date)
         db.add(sql)
     return redirect("/cdnimglist")
 
@@ -196,7 +193,7 @@ def upload_tamll(filename):
 def cdnimglist():
     date = time.strftime("%Y-%m-%d")
     db = Mysql()
-    lins = db.select(" select * from aali_img where date = '{0}' ".format(date))
+    lins = db.select(" select * from ali_attr_img where date = '{0}' ".format(date))
     return render_template('imglist.html', list=lins)
 
 
@@ -206,7 +203,7 @@ def download_img():
     date = time.strftime("%Y-%m-%d")
     unix_time = int(time.time())
     db = Mysql()
-    lins = db.select(" select * from aali_img where date = '{0}' ".format(date))
+    lins = db.select(" select * from ali_attr_img where date = '{0}' ".format(date))
     name = '天猫图片_' + str(unix_time) + '.xls'
     title = (u'编号', u'名称', u'图片地址', u'日期')
     dirpath = os.path.join(app.root_path, ZIP_FOLDER, name)
@@ -227,12 +224,6 @@ def show_img(filename):
     image_data = base64.b64encode(h.read())
     h.close()
     return Response(base64.b64decode(image_data) , mimetype="image/jpeg")
-
-@app.route('/test')
-def test():
-    ip = get_test_ip()
-    print(ip)
-
 
 if __name__ == '__main__':
     app.run(debug=True)
